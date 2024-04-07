@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './App.css'
 
 const App = () => {
-  // tallenna napit omaan tilaansa
+  
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
@@ -45,12 +45,14 @@ const Statistics = ({ good, neutral, bad }) => {
 }
 
 const Button = ({ text, handleClick }) => {
+
   return (
     <button className='button'onClick={handleClick}>{text}</button>
   )
 }
 
 const Display = ({text, value}) => {
+
   return (
     <div>
       <p>{text} {value}</p>
