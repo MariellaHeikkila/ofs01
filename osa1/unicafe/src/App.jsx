@@ -15,6 +15,7 @@ const App = () => {
         <Button text='neutral' handleClick={() => setNeutral(neutral + 1)} />
         <Button text='bad' handleClick={() => setBad(bad + 1)} />
       </div>
+      <h2>Statistics</h2>
       {good || neutral || bad ?
         <Statistics good={good} neutral={neutral} bad={bad} />
         :
@@ -32,14 +33,13 @@ const Statistics = ({ good, neutral, bad }) => {
   const positive = (good / all) * 100
 
   return (
-    <div>
-      <h2>Statistics</h2>
+    <div>      
       <Display text='Good:' value={good} />
       <Display text='Neutral:' value={neutral} />
       <Display text='Bad:' value={bad} />
       <Display text='All:' value={all} />
       <Display text='Average:' value={average || 0} />
-      <Display text='Positive as percentage:' value={positive || 0} />
+      <Display text='Positive%:' value={positive || 0} />
     </div>
   )
 }
@@ -55,7 +55,14 @@ const Display = ({text, value}) => {
 
   return (
     <div>
-      <p>{text} {value}</p>
+      <table style={{width: '100%'}}>
+        <tbody>
+        <tr>
+          <td>{text}</td>
+          <td>{value}</td>
+        </tr> 
+        </tbody>       
+      </table>
     </div>
   )
 }
