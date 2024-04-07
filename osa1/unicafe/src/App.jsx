@@ -1,35 +1,42 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  // tallenna napit omaan tilaansa
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
 
   return (
-    <>
+    <div className='container'>
+      <h1>Give feedback</h1>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <Button text='good' handleClick={() => setGood(good + 1)} />
+        <Button text='neutral' handleClick={() => setNeutral(neutral + 1)} />
+        <Button text='bad' handleClick={() => setBad(bad + 1)} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      <h2>Statistics</h2>
+      <div>
+       <Display text='Good' value={good} />
+        <Display text='Neutral' value={neutral} />
+        <Display text='Bad' value={bad} />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
 export default App
+
+const Button = ({ text, handleClick }) => {
+  return (
+    <button className='button'onClick={handleClick}>{text}</button>
+  )
+}
+
+const Display = ({text, value}) => {
+  return (
+    <div>
+      <p>{text} {value}</p>
+    </div>
+  )
+}
