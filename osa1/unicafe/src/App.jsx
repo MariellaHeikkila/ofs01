@@ -15,7 +15,11 @@ const App = () => {
         <Button text='neutral' handleClick={() => setNeutral(neutral + 1)} />
         <Button text='bad' handleClick={() => setBad(bad + 1)} />
       </div>
-      <Statistics good={good} neutral={neutral} bad={bad} />
+      {good || neutral || bad ?
+        <Statistics good={good} neutral={neutral} bad={bad} />
+        :
+        <p>No feedback given</p>
+        }
     </div>
   )
 }
