@@ -1,4 +1,8 @@
-osan 1 tehtävien 1.1-1.5 react-koodi tähän hakemistoon
+
+osan 2 tehtävien 2.1.-2.5. react-koodi tähän hakemistoon
+
+--
+--
 
 luo vite projekti:
 
