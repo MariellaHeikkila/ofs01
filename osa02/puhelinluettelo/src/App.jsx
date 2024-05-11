@@ -24,11 +24,21 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    if ( persons.find(person => person.name === newName)) {
-      alert(`${newName} is already in the phonebook.`)
-      return
-    }
 
+    const personAlreadyExists = persons.find(person => person.name === newName)
+
+    if (personAlreadyExists) {
+      if (window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)) {
+        const changedPerson = { ...personAlreadyExists, number: newNumber}
+        personService
+        .update(personAlreadyExists.id, changedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.id !== personAlreadyExists.id ? person : returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
+      }
+    } else {
     personService
       .create(nameObject)
       .then(returnedPerson => {
@@ -36,6 +46,7 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+    }
   }
 
   const deleteName = (id) => {
@@ -48,6 +59,18 @@ const App = () => {
             setPersons(persons.filter(person => person.id !== id))
           })
       }
+  }
+
+  const updateName = (id) => {
+    const person = persons.find(person => person.id === id)
+    const changedPerson = { ...person, number: newNumber}
+    if (window.confirm(`${person.name} is already added to the phonebook, replace the old number with a new one?`)) {
+    personService
+    .update(id, changedPerson)
+    .then(returnedPerson => {
+      setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
+    })
+  }
   }
 
   const handleNameChange = (event) => {
