@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import personService from './services/persons'
+import './App.css'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -36,6 +39,10 @@ const App = () => {
           setPersons(persons.map(person => person.id !== personAlreadyExists.id ? person : returnedPerson))
           setNewName('')
           setNewNumber('')
+          setSuccessMessage(`Updated ${newName} phonenumber succesfully yay!`)
+          setTimeout(() => {
+          setSuccessMessage(null)
+        }, 2000)
         })
       }
     } else {
@@ -45,6 +52,10 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        setSuccessMessage(`Added ${newName} succesfully to phonebook yay!`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 2000)
       })
     }
   }
@@ -57,20 +68,12 @@ const App = () => {
           .deletePerson(id)
           .then(response => {
             setPersons(persons.filter(person => person.id !== id))
+            setSuccessMessage(`Deleted ${person.name} succesfully from phonebook yay!`)
+            setTimeout(() => {
+              setSuccessMessage(null)
+            }, 2000)
           })
       }
-  }
-
-  const updateName = (id) => {
-    const person = persons.find(person => person.id === id)
-    const changedPerson = { ...person, number: newNumber}
-    if (window.confirm(`${person.name} is already added to the phonebook, replace the old number with a new one?`)) {
-    personService
-    .update(id, changedPerson)
-    .then(returnedPerson => {
-      setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
-    })
-  }
   }
 
   const handleNameChange = (event) => {
@@ -93,6 +96,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} classname='success'/>
+      <Notification message={errorMessage} classname='error'/>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h2>Add new name and number</h2>
       <PersonForm addName={addName} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
@@ -103,6 +108,18 @@ const App = () => {
 }
 
 export default App
+
+const Notification = ({ message, classname }) => {
+  if (message === null) {
+    return null
+  }
+  
+  return (
+    <div className={classname}>
+      {message}
+    </div>
+  )
+}
 
 const Filter = ({filter, handleFilterChange}) => {
   return (
