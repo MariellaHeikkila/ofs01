@@ -1,10 +1,10 @@
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function App() {
 
   const [countries, setCountries] = useState([])
-  const [filter, setFilter] = useState('')  
+  const [filter, setFilter] = useState('')
+  const [currentCountry, setCurrentCountry] = useState('')
 
   useEffect(() => {
 
@@ -20,12 +20,16 @@ function App() {
   const handleFilterChange = (event) => {
     console.log(event.target.value)
     setFilter(event.target.value)
+    setCurrentCountry('')
   }
- 
+
   const countriesToShow = filter 
   ? countries.filter(country => country.name.common.toLowerCase().includes(filter.toLowerCase()))
   : countries
 
+  const handleShow = (country) => {
+    setCurrentCountry(country)
+  }
 
   return (
     <>
@@ -33,7 +37,7 @@ function App() {
     {countriesToShow.length > 10 ?
       <p>Too many matches, specify another letter</p>
       :
-      <Countries countriesToShow={countriesToShow} />}
+      <Countries countriesToShow={countriesToShow} handleShow={handleShow} currentCountry={currentCountry}/>}
     </>
   )
 }
@@ -52,29 +56,46 @@ const Filter = ({filter, handleFilterChange}) => {
   )
 }
 
-const Countries = ({countriesToShow}) => {
+const Countries = ({countriesToShow, handleShow, currentCountry}) => {
+  
   return (
+    <div>
+    {countriesToShow.length === 1 ? (
+      <CountryDetails country={countriesToShow[0]} />
+    ) : currentCountry ? (
+      <CountryDetails country={currentCountry} />
+    ) : (
+      <ul>
+        {countriesToShow.map((country) => (
+          <li key={country.name.common}>
+            {country.name.common}{" "}
+            <button onClick={() => handleShow(country)}>show</button>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+  )
+}
+
+const CountryDetails = ({ country }) => {
+  return (
+  <div key={country.name.common}>
+    <h1>{country.name.common}</h1>
+    <p>Capital: {country.capital[0]}</p>
+    <p>Area: {country.area}</p>
+    <h2>Languages:</h2>
     <ul>
-      {countriesToShow.map(country =>
-        countriesToShow.length === 1 ?
-        <div key={country.name.common}>
-          <h1>{country.name.common}</h1>
-          <p>Capital: {country.capital[0]}</p>
-          <p>Area: {country.area}</p>
-          <h2>Languages:</h2>
-          <ul>
-            {Object.values(country.languages).map(language => (
-              <li key={language}>{language}</li>
-            ))}
-          </ul>
-          <img src={country.flags.png} alt={country.name.common} width='150px' height='150px'/>
-        </div>
-        :
-        <p key={country.name.common}>
-          {country.name.common}
-          </p>
-      )}
-      
+      {Object.values(country.languages).map((language) => (
+        <li key={language}>{language}</li>
+      ))}
     </ul>
+    <img
+      src={country.flags.png}
+      alt={country.name.common}
+      width="150px"
+      height="150px"
+    />
+  </div>  
   )
 }
