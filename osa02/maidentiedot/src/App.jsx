@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
+import Weather from './Weather'
 
 function App() {
 
   const [countries, setCountries] = useState([])
   const [filter, setFilter] = useState('')
   const [currentCountry, setCurrentCountry] = useState('')
+  const [lat, setLat] = useState(0)
+  const [lng, setLng] = useState(0)
 
   useEffect(() => {
 
@@ -29,6 +32,8 @@ function App() {
 
   const handleShow = (country) => {
     setCurrentCountry(country)
+    setLat(country.latlng[0])
+    setLng(country.latlng[1])
   }
 
   return (
@@ -37,7 +42,8 @@ function App() {
     {countriesToShow.length > 10 ?
       <p>Too many matches, specify another letter</p>
       :
-      <Countries countriesToShow={countriesToShow} handleShow={handleShow} currentCountry={currentCountry}/>}
+      <Countries countriesToShow={countriesToShow} handleShow={handleShow} currentCountry={currentCountry} lat={lat} lng={lng}/>}
+      
     </>
   )
 }
@@ -56,14 +62,14 @@ const Filter = ({filter, handleFilterChange}) => {
   )
 }
 
-const Countries = ({countriesToShow, handleShow, currentCountry}) => {
+const Countries = ({countriesToShow, handleShow, currentCountry, lat, lng}) => {
   
   return (
     <div>
     {countriesToShow.length === 1 ? (
-      <CountryDetails country={countriesToShow[0]} />
+      <CountryDetails country={countriesToShow[0]} lat={lat} lng={lng}/>
     ) : currentCountry ? (
-      <CountryDetails country={currentCountry} />
+      <CountryDetails country={currentCountry} lat={lat} lng={lng}/>
     ) : (
       <ul>
         {countriesToShow.map((country) => (
@@ -78,7 +84,7 @@ const Countries = ({countriesToShow, handleShow, currentCountry}) => {
   )
 }
 
-const CountryDetails = ({ country }) => {
+const CountryDetails = ({ country, lat, lng }) => {
   return (
   <div key={country.name.common}>
     <h1>{country.name.common}</h1>
@@ -96,6 +102,7 @@ const CountryDetails = ({ country }) => {
       width="150px"
       height="150px"
     />
+    <Weather lat={lat} lng={lng} city={country.capital[0]}/>
   </div>  
   )
 }
